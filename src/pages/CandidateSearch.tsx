@@ -3,94 +3,72 @@ import { searchGithub, searchGithubUser } from '../api/API';
 import { Candidate } from "../interfaces/Candidate.interface";
 
 const CandidateSearch = () => {
-  const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [currentCandidate, setCurrentCandidate] = useState<Candidate | null>(
     null
   );
-  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    fetchCandidates();
+    const fetchCandidate = async () => {
+      const candidates = await searchGithub();
+      if (candidates.length > 0) {
+        const detailedCandidate = await searchGithubUser(candidates[0].login);
+        setCurrentCandidate(detailedCandidate);
+      }
+    };
+    fetchCandidate();
   }, []);
 
-  const fetchCandidates = async () => {
-    setLoading(true);
-    const rawUsers = await searchGithub();
-    const detailedCandidates: Candidate[] = [];
-
-    for (const user of rawUsers) {
-      try {
-        const userDetails = await searchGithubUser(user.login);
-
-        if (!userDetails || userDetails.message === "Not Found") continue;
-
-        detailedCandidates.push({
-          name: userDetails.name || "N/A",
-          username: userDetails.login,
-          location: userDetails.location || "Unknown",
-          email: userDetails.email || "Not provided",
-          avatar_url: userDetails.avatar_url,
-          html_url: userDetails.html_url,
-          company: userDetails.company || "None",
-        });
-      } catch (error) {
-        console.error(`Error fetching user details: ${error}`);
-      }
-    }
-
-    setCandidates(detailedCandidates);
-    setCurrentCandidate(detailedCandidates[0] || null);
-    setLoading(false);
+  const handleRejectCandidate = () => {
+    setCurrentCandidate(null);
   };
 
   const handleSaveCandidate = () => {
-    if (!currentCandidate) return;
+    const savedCandidates =
+      JSON.parse(localStorage.getItem("savedCandidates") || "[]") || [];
+    if (currentCandidate) {
+      savedCandidates.push(currentCandidate);
+      localStorage.setItem("savedCandidates", JSON.stringify(savedCandidates));
+    }
+    setCurrentCandidate(null);
+  };
 
-    const savedCandidates = JSON.parse(
-      localStorage.getItem("savedCandidates") || "[]"
+  if (!currentCandidate) {
+    return (
+      <main>
+        <h2 className="main-message">No more candidates available to review!</h2>
+      </main>
     );
-    savedCandidates.push(currentCandidate);
-    localStorage.setItem("savedCandidates", JSON.stringify(savedCandidates));
-
-    handleNextCandidate();
-  };
-
-  const handleNextCandidate = () => {
-    const remainingCandidates = candidates.slice(1);
-    setCandidates(remainingCandidates);
-    setCurrentCandidate(remainingCandidates[0] || null);
-  };
-
-  if (loading) return <div>Loading candidates...</div>;
-  if (!currentCandidate)
-    return <div>No more candidates available to review!</div>;
+  }
 
   return (
     <main>
       <h1>Candidate Search</h1>
-      <div className="table" style={{ textAlign: "center" }}>
+      <div className="candidate-card">
         <img
           src={currentCandidate.avatar_url}
           alt={currentCandidate.username}
-          style={{
-            borderRadius: "50%",
-            width: "150px",
-            height: "150px",
-            marginBottom: "1rem",
-          }}
+          className="candidate-avatar"
         />
-        <h2>
-          <strong>{currentCandidate.name}</strong>{" "}
-          <em>({currentCandidate.username})</em>
-        </h2>
-        <p>Location: {currentCandidate.location}</p>
-        <p>Email: {currentCandidate.email}</p>
-        <p>Company: {currentCandidate.company}</p>
-        <div style={{ display: "flex", justifyContent: "center", gap: "1rem" }}>
-          <button className="active" onClick={handleNextCandidate}>
+        <div className="candidate-info">
+          <h2>
+            {currentCandidate.name || "N/A"} (
+            <span>{currentCandidate.username}</span>)
+          </h2>
+          <p>Location: {currentCandidate.location || "Unknown"}</p>
+          <p>Email: {currentCandidate.email || "Not provided"}</p>
+          <p>Company: {currentCandidate.company || "None"}</p>
+          <p>Bio: {currentCandidate.bio || "No bio available"}</p>
+          <p>
+            <a href={currentCandidate.html_url} target="_blank" rel="noopener">
+              View GitHub Profile
+            </a>
+          </p>
+        </div>
+        <div className="button-group">
+          <button className="reject-btn" onClick={handleRejectCandidate}>
             -
           </button>
-          <button className="active" onClick={handleSaveCandidate}>
+          <button className="accept-btn" onClick={handleSaveCandidate}>
             +
           </button>
         </div>

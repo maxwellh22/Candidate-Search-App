@@ -2,27 +2,17 @@ import { useEffect, useState } from "react";
 import { Candidate } from "../interfaces/Candidate.interface";
 
 const SavedCandidates = () => {
-  const [savedCandidates, setSavedCandidates] = useState<Candidate[]>([]);
+  const [candidates, setCandidates] = useState<Candidate[]>([]);
 
   useEffect(() => {
-    const storedCandidates = JSON.parse(
-      localStorage.getItem("savedCandidates") || "[]"
-    );
-    setSavedCandidates(storedCandidates);
+    const saved = JSON.parse(localStorage.getItem("savedCandidates") || "[]");
+    setCandidates(saved);
   }, []);
 
-  const handleRejectCandidate = (username: string) => {
-    const updatedCandidates = savedCandidates.filter(
-      (candidate) => candidate.username !== username
-    );
-    setSavedCandidates(updatedCandidates);
-    localStorage.setItem("savedCandidates", JSON.stringify(updatedCandidates));
-  };
-
   return (
-    <main>
-      <h1>Potential Candidates</h1>
-      {savedCandidates.length === 0 ? (
+    <div className="container">
+      <h1 className="title">Potential Candidates</h1>
+      {candidates.length === 0 ? (
         <p>No candidates have been saved yet!</p>
       ) : (
         <table className="table">
@@ -30,35 +20,49 @@ const SavedCandidates = () => {
             <tr>
               <th>Image</th>
               <th>Name</th>
+              <th>Username</th>
               <th>Location</th>
               <th>Email</th>
               <th>Company</th>
+              <th>Bio</th>
               <th>Reject</th>
             </tr>
           </thead>
           <tbody>
-            {savedCandidates.map((candidate, index) => (
-              <tr key={candidate.username || index}>
-                <td style={{ textAlign: "center" }}>
+            {candidates.map((candidate) => (
+              <tr key={candidate.username}>
+                <td>
                   <img
                     src={candidate.avatar_url}
-                    alt="Avatar"
-                    style={{ borderRadius: "50%", width: "50px" }}
+                    alt={`${candidate.name || candidate.username}'s avatar`}
+                    className="candidate-avatar-small"
                   />
                 </td>
+                <td>{candidate.name || "N/A"}</td>
+                <td>{candidate.username}</td>
+                <td>{candidate.location || "Unknown"}</td>
                 <td>
-                  <strong>{candidate.name}</strong>{" "}
-                  <em>({candidate.username})</em>
+                  {candidate.email ? (
+                    <a href={`mailto:${candidate.email}`}>{candidate.email}</a>
+                  ) : (
+                    "Not provided"
+                  )}
                 </td>
-                <td>{candidate.location}</td>
-                <td>
-                  <a href={`mailto:${candidate.email}`}>{candidate.email}</a>
-                </td>
-                <td>{candidate.company}</td>
+                <td>{candidate.company || "None"}</td>
+                <td>{candidate.bio || "N/A"}</td>
                 <td>
                   <button
-                    className="active"
-                    onClick={() => handleRejectCandidate(candidate.username)}
+                    className="reject-button"
+                    onClick={() => {
+                      const updatedCandidates = candidates.filter(
+                        (c) => c.username !== candidate.username
+                      );
+                      setCandidates(updatedCandidates);
+                      localStorage.setItem(
+                        "savedCandidates",
+                        JSON.stringify(updatedCandidates)
+                      );
+                    }}
                   >
                     -
                   </button>
@@ -68,7 +72,7 @@ const SavedCandidates = () => {
           </tbody>
         </table>
       )}
-    </main>
+    </div>
   );
 };
 

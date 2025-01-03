@@ -2,7 +2,7 @@ const Nav = () => {
   // TODO: Add necessary code to display the navigation bar and link between the pages
   return (
     <nav className="nav">
-      <ul>
+      <ul className="nav-list">
         <li className="nav-item">
           <a href="/" className="nav-link">
             Home
@@ -15,7 +15,7 @@ const Nav = () => {
         </li>
       </ul>
     </nav>
-  )
+  );
 };
 
 export default Nav;
