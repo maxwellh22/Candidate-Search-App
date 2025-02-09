@@ -4,7 +4,7 @@
 This is a Candidate Search Application that allows employers to search GitHub for developers, save candidates they like, and to have their contact information handy in the event they want to reach out to the candidate. The application loads profiles from GitHub's API and provides a clean UI for candidate selection.
 
 ## Live on Render
-Here is the link to the deployed application on Render:
+Here is the link to the deployed application on Render: https://candidate-search-app-1-x1ap.onrender.com/ 
 
 ## Features
 - Fetches GitHub users dynamically using the GitHub API
