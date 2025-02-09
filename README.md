@@ -1,33 +1,43 @@
-# React + TypeScript + Vite
+# Candidate Search Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Description
+This is a Candidate Search Application that allows employers to search GitHub for developers, save candidates they like, and to have their contact information handy in the event they want to reach out to the candidate. The application loads profiles from GitHub's API and provides a clean UI for candidate selection.
 
-Currently, two official plugins are available:
+## Live on Render
+Here is the link to the deployed application on Render:
 
-* [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md), which uses [Babel](https://babeljs.io/) for Fast Refresh
-* [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc), which uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
+- Fetches GitHub users dynamically using the GitHub API
+- Displays candidate information including name, email, username, profile picture, and location
+- Allows user to save candidates for review later
+- Enables user to skip candidates they don't like
+- Candidates who users like will be saved in localstorage so you can return to them if you navigate away from the page
 
-## Expanding the ESLint configuration
+## Installation
 
-If you're developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+If running locally:
 
-* Configure the top-level `parserOptions` property as follows:
+1. Clone the repo using the HTTPS link provided on the Github Repo page
+2. Navigate to the project folder on your local machine
+3. Install the required dependencies by running "npm install"
+4. Set up your environment variables for your local machine by creating a .env file and utilizing the template provided on the .env.example file
+5. Get your own GitHub personal access token from the developer settings menu on GitHub
+6. Navigate back to the project folder after updating your .env file, and run "npm run dev"
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+## Technologies Used
+- React
+- TypeScript
+- Vite
+- GitHub API / Personal Access Tokens
+- Render for hosting & deployment
 
-* Replace `plugin:@typescript-eslint/recommended` with `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`.
-* Optionally, add `plugin:@typescript-eslint/stylistic-type-checked`.
-* Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` and `plugin:react/jsx-runtime` to the `extends` list.
+## Contributions
+- This project is not looking for contributions at this time.
 
----
-© 2024 edX Boot Camps LLC. Confidential and Proprietary. All Rights Reserved.
+## License
+- This project is licensed under the MIT license
+
+## Contact
+- Maxwell Hurst
+- Email: maxwell.hurst22@gmail.com
+- GitHub: maxwellh22
